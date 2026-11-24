@@ -23,7 +23,7 @@ jobs:
           import re
           from pathlib import Path
           text = Path('config.xml').read_text(encoding='utf-8')
-match = re.search(r'<widget\b[^>]*\bversion="([^"]+)"', text, re.DOTALL)
+          match = re.search(r'<widget\b[^>]*\bversion="([^"]+)"', text, re.DOTALL)
           if not match:
               raise SystemExit('config.xml has no widget version')
           print(match.group(1))

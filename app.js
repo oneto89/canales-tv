@@ -110,13 +110,20 @@
   }
 
   function renderFavoritesBar() {
-    favoritesBar.innerHTML = '<div class="favorites-title">FAVORITOS</div>';
+    favoritesBar.innerHTML = '';
+    var title = document.createElement('div');
+    title.className = 'favorites-title';
+    title.textContent = 'FAVORITOS';
+    favoritesBar.appendChild(title);
+    var track = document.createElement('div');
+    track.className = 'favorites-track';
+    favoritesBar.appendChild(track);
     var favoriteChannels = channels.filter(isFavorite);
     if (!favoriteChannels.length) {
       var empty = document.createElement('div');
       empty.className = 'favorite-empty';
       empty.textContent = 'Todavía no agregas canales favoritos.';
-      favoritesBar.appendChild(empty);
+      track.appendChild(empty);
       return;
     }
     if (favoriteBarSelection >= favoriteChannels.length) favoriteBarSelection = 0;
@@ -124,6 +131,7 @@
       var tile = document.createElement('div');
       tile.className = 'favorite-tile' + (position === favoriteBarSelection ? ' selected' : '');
       tile.setAttribute('data-favorite-position', position);
+      tile.setAttribute('aria-label', channel.name);
       var logo = safeImage(channel.logo);
       if (logo) {
         var image = document.createElement('img');
@@ -138,8 +146,20 @@
       var name = document.createElement('span');
       name.textContent = channel.name;
       tile.appendChild(name);
-      favoritesBar.appendChild(tile);
+      track.appendChild(tile);
     });
+    var selectedTile = track.querySelector('.favorite-tile.selected');
+    if (selectedTile) {
+      track.scrollLeft = Math.max(0, selectedTile.offsetLeft - (track.clientWidth - selectedTile.offsetWidth) / 2);
+    }
+  }
+
+  function centerFavoriteSelection() {
+    var track = favoritesBar.querySelector('.favorites-track');
+    var selectedTile = track && track.querySelector('.favorite-tile.selected');
+    if (selectedTile) {
+      track.scrollLeft = Math.max(0, selectedTile.offsetLeft - (track.clientWidth - selectedTile.offsetWidth) / 2);
+    }
   }
 
   function showFavoritesBar() {
@@ -154,6 +174,7 @@
     renderFavoritesBar();
     favoritesBar.classList.remove('hidden');
     document.body.classList.add('favorites-open');
+    centerFavoriteSelection();
     scheduleOverlayClose('favorites');
   }
 
