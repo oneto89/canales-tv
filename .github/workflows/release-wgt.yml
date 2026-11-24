@@ -1,0 +1,46 @@
+name: Build and publish WGT
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Build WGT
+        id: package
+        shell: bash
+        run: |
+          VERSION=$(python3 - <<'PY'
+          import re
+          from pathlib import Path
+          text = Path('config.xml').read_text(encoding='utf-8')
+          match = re.search(r'\bversion="([^"]+)"', text)
+          if not match:
+              raise SystemExit('config.xml has no widget version')
+          print(match.group(1))
+          PY
+          )
+          TAG_VERSION="${GITHUB_REF_NAME#v}"
+          if [ "$VERSION" != "$TAG_VERSION" ]; then
+            echo "Tag $GITHUB_REF_NAME does not match config.xml version $VERSION" >&2
+            exit 1
+          fi
+          PACKAGE="CanalesTV-v${VERSION}.wgt"
+          zip -j "$PACKAGE" app.js config.xml index.html README.md style.css
+          echo "package=$PACKAGE" >> "$GITHUB_OUTPUT"
+
+      - name: Publish release asset
+        uses: softprops/action-gh-release@v2
+        with:
+          name: Canales TV ${{ github.ref_name }}
+          generate_release_notes: true
+          files: ${{ steps.package.outputs.package }}

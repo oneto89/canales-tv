@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<widget xmlns="http://www.w3.org/ns/widgets"
+        xmlns:tizen="http://tizen.org/ns/widgets"
+        id="https://codex.local/canales-tv"
+        version="1.1.8"
+        viewmodes="fullscreen">
+  <name>Canales TV</name>
+  <content src="index.html" />
+  <description>Reproductor de listas M3U para streams autorizados</description>
+  <access origin="*" subdomains="true" />
+  <tizen:application id="a2scodextv.CanalesTV" package="a2scodextv" required_version="4.0" />
+  <tizen:profile name="tv-samsung" />
+  <tizen:setting screen-orientation="landscape"
+                 context-menu="disable"
+                 background-support="disable"
+                 encryption="disable"
+                 install-location="auto"
+                 hwkey-event="enable" />
+  <tizen:privilege name="http://tizen.org/privilege/internet" />
+  <tizen:privilege name="http://tizen.org/privilege/tv.inputdevice" />
+</widget>
