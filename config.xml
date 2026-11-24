@@ -2,7 +2,7 @@
 <widget xmlns="http://www.w3.org/ns/widgets"
         xmlns:tizen="http://tizen.org/ns/widgets"
         id="https://codex.local/canales-tv"
-        version="1.2.0"
+        version="1.2.1"
         viewmodes="fullscreen">
   <name>Canales TV</name>
   <content src="index.html" />
